@@ -30,13 +30,15 @@ function iProxy(opt) {
             if (req.body && Object.keys(req.body).length) {
                 opts.form = req.body;
             }
-            var requestBody = '';
-            req.on('data', function(chunk) {
-                requestBody += chunk;
-            }).on('end', function() {
-                opts.body = requestBody;
-                request(opts).pipe(res);
-            });
+            
+            request(opts).pipe(res);
+            
+            // var requestBody = '';
+            // req.on('data', function(chunk) {
+            //     requestBody += chunk;
+            // }).on('end', function() {
+            //     request(opts).pipe(res);
+            // });
         } else {
             next();
         }
