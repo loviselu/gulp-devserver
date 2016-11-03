@@ -52,6 +52,7 @@ var BROWSER_SCIPTS_DIR = path.join(__dirname, 'lib');
 var defaults = {
     port: 3000,
     defaultFile: 'index.html',
+    defaultExts:['html'],
     https: false,
     open: true,
     debug: false,
@@ -190,7 +191,8 @@ module.exports = function(options) {
         // 静态文件服务器
         app.use(serveStatic(config.path, {
             index: config.listdir ? false : config.defaultFile,
-            lastModified: false
+            lastModified: false ,
+            extensions:config.defaultExts? config.defaultExts: false
         }));
 
         // 列出目录文件列表

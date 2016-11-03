@@ -80,6 +80,10 @@
 
 启动服务器默认打开的文件，当设置`listdir`为`true`时将不会生效。`default`: `index.html`
 
+**defaultExts**
+
+启动服务器默认文件后缀，当文件没有找到的时候默认尝试使用默认文件后缀再尝试一次。`default`: ['html']
+
 **https**
 
 静态服务器是否使用`https`协议。`default`: `false`
