@@ -76,6 +76,12 @@ var defaults = {
 
 module.exports = function(options) {
     var config = utils.extend({}, defaults, options);
+
+    //直接用外部传进来的mock数据，方便外部实时更新
+    if(options && options.proxy && options.proxy.mock){
+        config.proxy.mock = options.proxy.mock;
+    }
+    
     config.host = getIPAddress();
     // 自动打开浏览器
     var openInBrowser = function() {
