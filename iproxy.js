@@ -3,6 +3,8 @@
 var url = require('url');
 var request = require('request');
 var Mock = require('mockjs');
+var qs = require('querystring');
+var url = require('url');
 
 var utils = require('./utils');
 
@@ -18,9 +20,31 @@ function iProxy(opt) {
         var parsed = url.parse(req.url);
         var m = opt.mock[parsed.pathname];
         var opts = null;
+
         if (m) {
             res.writeHead(200, {'Content-Type': 'application/json;charset=UTF-8'});
+            //把所有参数都放到Mock.Random中用于占位符
+            var extendObj = {};
+            var query;
+
+            if(req.method === "GET"){
+                var url_parts = url.parse(req.url, true);
+                query = url_parts.query;
+            }else if (req.method == 'POST') {
+                query = req.body;
+            }
+
+            for(var key in query){
+                extendObj[key.toLowerCase()] = (function(key){
+                    return function(){
+                        return query[key]
+                    };
+                })(key)
+            }
+
+            Mock.Random.extend(extendObj)
             res.end(JSON.stringify(Mock.mock(m)));
+
         } else if (opt.host && isProxy(parsed.pathname)) {
             req.headers['Host'] = opt.host.replace(/^https?:\/\//, '');
             opts = {
