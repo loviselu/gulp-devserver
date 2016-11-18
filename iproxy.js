@@ -19,6 +19,17 @@ function iProxy(opt) {
     return function(req, res, next) {
         var parsed = url.parse(req.url);
         var m = opt.mock[parsed.pathname];
+
+        //路径支持前缀匹配
+        if(!m){
+            for(var key in opt.mock){
+                if(parsed.pathname.indexOf(key) === 0){
+                    m = opt.mock[key];
+                    break;
+                }
+            }
+        }
+
         var opts = null;
 
         if (m) {
@@ -43,8 +54,11 @@ function iProxy(opt) {
             }
 
             Mock.Random.extend(extendObj)
-            res.end(JSON.stringify(Mock.mock(m)));
-
+            if(typeof m === 'function'){
+                res.end(JSON.stringify(m(query)));
+            }else{
+                res.end(JSON.stringify(Mock.mock(m)));
+            }
         } else if (opt.host && isProxy(parsed.pathname)) {
             req.headers['Host'] = opt.host.replace(/^https?:\/\//, '');
             opts = {
